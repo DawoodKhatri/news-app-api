@@ -20,3 +20,5 @@ app.get("/search", searchStories);
 app.listen(PORT || 5000, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export default app;

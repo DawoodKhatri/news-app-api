@@ -55,6 +55,18 @@ export const searchStories = async (req, res) => {
     const page = (req.query.page || 1) - 1;
     const query = req.query.query || "";
 
+    if (!query) {
+      return res.json({
+        meta: {
+          page: 1,
+          totalPages: 0,
+        },
+        data: {
+          stories: [],
+        },
+      });
+    }
+
     const stories = await fetchSearchedStories({
       searchQuery: query,
       page,
@@ -81,16 +93,4 @@ export const searchStories = async (req, res) => {
   }
 };
 
-export const getSpecificStory = async (req, res) => {
-  try {
-    const { id: storyId } = req.params;
-    let story = await getFromCache(`${storyId}`);
-    if (!story) {
-      story = await fetchStoryById(storyId);
-      await setToCache(`${storyId}`, story, 86400);
-    }
-    res.json(story);
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+export default { getNewestStories, searchStories };
